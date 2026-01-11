@@ -1,0 +1,9 @@
+[package]
+name = "qrmonsters-qr"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+qrcode = "0.14"
+image = { version = "0.25", default-features = false, features = ["png", "jpeg"] }
+rqrr = "0.9"

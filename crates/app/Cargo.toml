@@ -11,6 +11,14 @@ uuid = { version = "1", features = ["serde", "v4"] }
 blake3 = "1"
 
 qrmonsters-core = { path = "../core" }
+qrmonsters-qr = { path = "../qr" }
+qrmonsters-avatar = { path = "../avatar" }
+
+# For async file reading in scanner
+wasm-bindgen = { version = "0.2", optional = true }
+wasm-bindgen-futures = { version = "0.4", optional = true }
+js-sys = { version = "0.3", optional = true }
+web-sys = { version = "0.3", optional = true, features = ["File", "FileList", "FileReader", "Blob"] }
 
 # Web storage (only used on wasm)
 gloo-storage = { version = "0.3", optional = true }
@@ -20,7 +28,7 @@ directories = { version = "5", optional = true }
 
 [features]
 default = []
-web = ["dep:gloo-storage", "dioxus/web"]
+web = ["dep:gloo-storage", "dep:wasm-bindgen", "dep:wasm-bindgen-futures", "dep:js-sys", "dep:web-sys", "dioxus/web"]
 desktop = ["dioxus/desktop", "native"]
 mobile = ["dioxus/mobile", "native"]
 native = ["dep:directories"]

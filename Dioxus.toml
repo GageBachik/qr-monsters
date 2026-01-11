@@ -10,8 +10,12 @@ path = "crates/app"
 title = "QR Monsters"
 
 [web.resource]
-style = []
+style = ["assets/styles.css"]
 script = []
+
+[web.watcher]
+# Watch the assets directory
+watch_path = ["crates/app/assets"]
 
 [web.resource.dev]
 script = []

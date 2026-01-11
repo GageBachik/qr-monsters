@@ -26,7 +26,7 @@ pub enum Archetype {
     Beast,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Stats {
     pub hp: i16,
     pub atk: i16,
@@ -36,7 +36,7 @@ pub struct Stats {
     pub luck: i16, // 0..=20
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Monster {
     pub v: u8, // version for forwards-compat
     pub id: Uuid,
