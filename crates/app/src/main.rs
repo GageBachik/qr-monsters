@@ -70,12 +70,15 @@ fn App() -> Element {
         script { src: "https://cdn.tailwindcss.com" }
         script { dangerous_inner_html: TAILWIND_CONFIG }
 
-        // App container with gradient background
+        // App container with gradient background - fixed viewport, content scrolls only when needed
         div {
-            class: "min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white",
+            class: "h-screen overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white",
             div {
-                class: "max-w-2xl mx-auto px-4 py-6 pb-24",
-                Router::<Route> {}
+                class: "h-full overflow-y-auto",
+                div {
+                    class: "max-w-2xl mx-auto px-4 py-6",
+                    Router::<Route> {}
+                }
             }
         }
     }

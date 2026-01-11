@@ -13,3 +13,7 @@ bincode = "1"
 base64 = "0.22"
 getrandom_02 = { package = "getrandom", version = "0.2", features = ["js"] }
 getrandom = { version = "0.3", features = ["wasm_js"] }
+
+# For date handling in wasm
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+js-sys = "0.3"
