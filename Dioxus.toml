@@ -1,21 +1,17 @@
 [application]
+name = "qrmonsters"
+default_platform = "mobile"
+
+# Point to the app crate in the workspace
+[application.package]
+path = "crates/app"
 
 [web.app]
+title = "QR Monsters"
 
-# HTML title tag content
-title = "qr-monsters"
-
-# include `assets` in web platform
 [web.resource]
-
-# Additional CSS style files
 style = []
-
-# Additional JavaScript files
 script = []
 
 [web.resource.dev]
-
-# Javascript code file
-# serve: [dev-server] only
 script = []
