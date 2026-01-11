@@ -5,7 +5,7 @@ mod screens;
 mod storage;
 
 // Re-export screen components for router
-pub use screens::{Home, Import, Battle};
+pub use screens::{Battle, Home, Import};
 pub use screens::MonsterDetail as Monster;
 
 #[derive(Clone, Routable, Debug, PartialEq)]
@@ -27,10 +27,56 @@ fn main() {
     dioxus::launch(App);
 }
 
+const TAILWIND_CONFIG: &str = r##"
+tailwind.config = {
+    theme: {
+        extend: {
+            colors: {
+                fire: '#FF6B35',
+                water: '#4ECDC4',
+                earth: '#8B7355',
+                air: '#E8E8E8',
+                electric: '#FFD700',
+            },
+            animation: {
+                'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
+                'float': 'float 3s ease-in-out infinite',
+                'shake': 'shake 0.5s ease-in-out',
+            },
+            keyframes: {
+                'pulse-glow': {
+                    '0%, 100%': { boxShadow: '0 0 20px currentColor' },
+                    '50%': { boxShadow: '0 0 40px currentColor' },
+                },
+                'float': {
+                    '0%, 100%': { transform: 'translateY(0)' },
+                    '50%': { transform: 'translateY(-10px)' },
+                },
+                'shake': {
+                    '0%, 100%': { transform: 'translateX(0)' },
+                    '25%': { transform: 'translateX(-5px)' },
+                    '75%': { transform: 'translateX(5px)' },
+                },
+            },
+        },
+    },
+}
+"##;
+
+#[component]
 fn App() -> Element {
     rsx! {
-        div { class: "app",
-            Router::<Route> {}
+        // Tailwind CDN
+        script { src: "https://cdn.tailwindcss.com" }
+        script { dangerous_inner_html: TAILWIND_CONFIG }
+
+        // App container with gradient background
+        div {
+            class: "min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white",
+            div {
+                class: "max-w-2xl mx-auto px-4 py-6 pb-24",
+                Router::<Route> {}
+            }
         }
     }
 }

@@ -19,15 +19,15 @@ pub fn StatBar(
     };
 
     rsx! {
-        div { class: "stat-row",
-            span { class: "stat-label", "{label}" }
-            div { class: "stat-bar-bg",
+        div { class: "flex items-center gap-2 group",
+            span { class: "w-12 text-xs font-bold text-slate-400 uppercase tracking-wider", "{label}" }
+            div { class: "flex-1 h-2 bg-slate-700/50 rounded-full overflow-hidden",
                 div {
-                    class: "stat-bar-fill",
-                    style: "width: {pct}%; background: {color};"
+                    class: "h-full rounded-full transition-all duration-500 ease-out",
+                    style: "width: {pct}%; background: linear-gradient(90deg, {color}, {color}dd);"
                 }
             }
-            span { class: "stat-value", "{value}" }
+            span { class: "w-8 text-right text-sm font-semibold text-white", "{value}" }
         }
     }
 }
