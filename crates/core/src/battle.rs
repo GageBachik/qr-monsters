@@ -122,9 +122,41 @@ fn element_advantage(a: Element, b: Element) -> i16 {
     }
 }
 
+/// Generate a battle seed that includes the current date.
+/// This makes battles deterministic for the same day but different across days.
 fn battle_seed(a: Uuid, b: Uuid) -> [u8; 32] {
     let mut hasher = blake3::Hasher::new();
-    hasher.update(a.as_bytes());
-    hasher.update(b.as_bytes());
+
+    // Add current day (days since Unix epoch) to make battles change daily
+    let today = current_day();
+    hasher.update(&today.to_le_bytes());
+
+    // Sort IDs so battle(a,b) == battle(b,a) for same-day consistency
+    let (id1, id2) = if a < b { (a, b) } else { (b, a) };
+    hasher.update(id1.as_bytes());
+    hasher.update(id2.as_bytes());
+
     *hasher.finalize().as_bytes()
+}
+
+/// Get the current day as days since Unix epoch.
+/// Works on both wasm and native targets.
+fn current_day() -> u32 {
+    #[cfg(target_arch = "wasm32")]
+    {
+        // In wasm, use js_sys to get current time
+        let millis = js_sys::Date::now();
+        let secs = (millis / 1000.0) as u64;
+        (secs / 86400) as u32
+    }
+
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        use std::time::{SystemTime, UNIX_EPOCH};
+        let secs = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_secs();
+        (secs / 86400) as u32
+    }
 }
