@@ -46,32 +46,53 @@ pub fn Import() -> Element {
     };
 
     rsx! {
-        div { class: "screen import-screen",
-            header { class: "screen-header",
-                Link { class: "back-link", to: Route::Home {}, "← Back" }
-                h1 { "Import Monster" }
+        div { class: "space-y-6",
+            // Header
+            header { class: "flex items-center gap-4",
+                Link {
+                    class: "text-purple-400 hover:text-purple-300 transition-colors",
+                    to: Route::Home {},
+                    "← Back"
+                }
+                h1 { class: "text-2xl font-bold text-white", "Import Monster" }
             }
 
-            div { class: "tab-bar",
+            // Tab bar
+            div { class: "flex bg-slate-800/50 rounded-xl p-1",
                 button {
-                    class: if *mode.read() == ImportMode::Paste { "tab active" } else { "tab" },
+                    class: if *mode.read() == ImportMode::Paste {
+                        "flex-1 py-2 px-4 rounded-lg font-medium transition-all duration-200 bg-purple-600 text-white shadow-lg"
+                    } else {
+                        "flex-1 py-2 px-4 rounded-lg font-medium transition-all duration-200 text-slate-400 hover:text-white"
+                    },
                     onclick: move |_| mode.set(ImportMode::Paste),
-                    "Paste Code"
+                    "📋 Paste Code"
                 }
                 button {
-                    class: if *mode.read() == ImportMode::Scan { "tab active" } else { "tab" },
+                    class: if *mode.read() == ImportMode::Scan {
+                        "flex-1 py-2 px-4 rounded-lg font-medium transition-all duration-200 bg-purple-600 text-white shadow-lg"
+                    } else {
+                        "flex-1 py-2 px-4 rounded-lg font-medium transition-all duration-200 text-slate-400 hover:text-white"
+                    },
                     onclick: move |_| mode.set(ImportMode::Scan),
-                    "Scan QR"
+                    "📷 Scan QR"
                 }
             }
 
-            div { class: "import-content",
+            // Content area
+            div { class: "bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6",
                 match *mode.read() {
                     ImportMode::Paste => rsx! {
-                        div { class: "paste-mode",
-                            p { class: "import-hint", "Paste a QRM1:… share code below" }
+                        div { class: "space-y-4",
+                            p { class: "text-slate-400 text-sm",
+                                "Paste a "
+                                span { class: "font-mono text-purple-400", "QRM1:…" }
+                                " share code below"
+                            }
                             textarea {
-                                class: "import-input",
+                                class: "w-full bg-slate-900/50 border border-slate-700 rounded-xl p-4 text-sm font-mono
+                                        text-white placeholder-slate-500 resize-none focus:outline-none focus:ring-2
+                                        focus:ring-purple-500/50 focus:border-transparent transition-all duration-200",
                                 rows: "4",
                                 placeholder: "QRM1:...",
                                 value: "{input}",
@@ -81,14 +102,18 @@ pub fn Import() -> Element {
                                 }
                             }
                             button {
-                                class: "btn btn-primary",
+                                class: "w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500
+                                        text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-green-500/25
+                                        hover:shadow-green-500/40 transition-all duration-200 hover:scale-[1.02]
+                                        flex items-center justify-center gap-2",
                                 onclick: move |_| do_import(input.read().clone()),
-                                "Import"
+                                span { class: "text-xl", "📥" }
+                                "Import Monster"
                             }
                         }
                     },
                     ImportMode::Scan => rsx! {
-                        div { class: "scan-mode",
+                        div { class: "space-y-4",
                             QrScanner {
                                 on_scan: move |code| do_import(code),
                                 on_error: move |e| msg.set(Some((false, e)))
@@ -96,12 +121,18 @@ pub fn Import() -> Element {
                         }
                     }
                 }
+            }
 
-                if let Some((is_success, message)) = msg.read().as_ref() {
-                    p {
-                        class: if *is_success { "message success" } else { "message error" },
-                        "{message}"
-                    }
+            // Message display
+            if let Some((is_success, message)) = msg.read().as_ref() {
+                div {
+                    class: if *is_success {
+                        "bg-green-500/20 border border-green-500/50 rounded-xl p-4 text-green-400 flex items-center gap-3"
+                    } else {
+                        "bg-red-500/20 border border-red-500/50 rounded-xl p-4 text-red-400 flex items-center gap-3"
+                    },
+                    span { class: "text-2xl", if *is_success { "✅" } else { "❌" } }
+                    span { class: "font-medium", "{message}" }
                 }
             }
         }

@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
-use qrmonsters_core::Monster;
 use qrmonsters_avatar::monster_svg;
+use qrmonsters_core::Monster;
 
 /// Displays a procedurally generated monster avatar
 #[component]
@@ -14,7 +14,7 @@ pub fn MonsterAvatar(
 
     rsx! {
         div {
-            class: "monster-avatar",
+            class: "flex items-center justify-center rounded-xl overflow-hidden",
             dangerous_inner_html: "{svg}"
         }
     }
