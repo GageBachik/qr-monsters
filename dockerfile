@@ -2,7 +2,7 @@
 # Use Ubuntu 24.04 which has glibc 2.39 (needed for prebuilt dioxus-cli)
 FROM ubuntu:24.04 AS builder
 
-# Install dependencies
+# Install dependencies including wabt for wasm-strip
 RUN apt-get update && apt-get install -y \
     curl \
     build-essential \
@@ -25,6 +25,9 @@ RUN cargo install wasm-bindgen-cli --version 0.2.106
 # Install dioxus-cli via binstall (prebuilt binary works with glibc 2.39)
 RUN curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
 RUN cargo binstall dioxus-cli -y --force
+
+# Ensure wasm-strip from wabt is available in cargo bin path
+RUN ln -sf /usr/bin/wasm-strip /root/.cargo/bin/wasm-strip
 
 WORKDIR /app
 
@@ -58,7 +61,7 @@ RUN dx build --package qrmonsters-app --platform web --release
 FROM nginx:alpine AS runtime
 
 # Copy built static files
-COPY --from=builder /app/target/dx/qrmonsters/release/web/public /usr/share/nginx/html
+COPY --from=builder /app/target/dx/qrmonsters-app/release/web/public /usr/share/nginx/html
 
 # Configure nginx for SPA routing
 RUN echo 'server { \
