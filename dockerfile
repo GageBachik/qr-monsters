@@ -1,5 +1,18 @@
 # Stage 1: Build the web app
-FROM rust:1.85 AS builder
+# Use Ubuntu 24.04 which has glibc 2.39 (needed for prebuilt dioxus-cli)
+FROM ubuntu:24.04 AS builder
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    build-essential \
+    pkg-config \
+    libssl-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Rust
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
 
 # Install wasm target
 RUN rustup target add wasm32-unknown-unknown
@@ -7,8 +20,9 @@ RUN rustup target add wasm32-unknown-unknown
 # Install wasm-bindgen-cli (must match version in Cargo.lock)
 RUN cargo install wasm-bindgen-cli --version 0.2.106
 
-# Install dioxus-cli from source (binstall binaries require newer glibc)
-RUN cargo install dioxus-cli --locked
+# Install dioxus-cli via binstall (prebuilt binary works with glibc 2.39)
+RUN curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+RUN cargo binstall dioxus-cli -y --force
 
 WORKDIR /app
 
