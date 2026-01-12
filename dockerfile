@@ -9,10 +9,8 @@ RUN apt-get update && apt-get install -y \
     pkg-config \
     libssl-dev \
     binaryen \
+    wabt \
     && rm -rf /var/lib/apt/lists/*
-
-# Create a no-op wasm-strip wrapper (dx expects it but binaryen may not provide it)
-RUN printf '#!/bin/bash\nexit 0\n' > /usr/local/bin/wasm-strip && chmod +x /usr/local/bin/wasm-strip
 
 # Install Rust
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
