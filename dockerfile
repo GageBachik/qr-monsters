@@ -1,5 +1,5 @@
 # Stage 1: Build the web app
-FROM rust:1.83 AS builder
+FROM rust:1.85 AS builder
 
 # Install wasm target
 RUN rustup target add wasm32-unknown-unknown
