@@ -22,4 +22,5 @@ script = []
 
 # Disable wasm-opt to avoid strip binary issues in Docker
 [web.wasm_opt]
-level = "0"
+level = "z"
+enabled = false
