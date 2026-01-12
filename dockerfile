@@ -7,9 +7,8 @@ RUN rustup target add wasm32-unknown-unknown
 # Install wasm-bindgen-cli (must match version in Cargo.lock)
 RUN cargo install wasm-bindgen-cli --version 0.2.106
 
-# Install dioxus-cli
-RUN curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
-RUN cargo binstall dioxus-cli -y --force
+# Install dioxus-cli from source (binstall binaries require newer glibc)
+RUN cargo install dioxus-cli --locked
 
 WORKDIR /app
 
